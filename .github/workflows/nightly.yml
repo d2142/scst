@@ -1,0 +1,29 @@
+name: Nightly build
+
+on:
+  push:
+    branches:
+      - 3.7-gleb-add_nightly_action
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2
+
+      - name: Install sparse
+        run: |
+          sudo apt-get install sparse
+
+      - name: Install smatch
+        run: |
+          git clone git://repo.or.cz/smatch.git
+          cd smatch
+          make -j
+          sudo PREFIX= make install
+
+      - name: Nightly Build
+        run: |
+          cd nightly
+          ./bin/nightly -a nightly
